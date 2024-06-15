@@ -9,13 +9,16 @@ from app.proposicoes_crawler import ProposicoesCrawler
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
+@app.get("/municipios")
+def read_municipios():
+    return [
+        {"id": 9, "nome": "Ponta Grossa - PR"},
+        {"id": 12, "nome": "União da Vitória - PR"},
+    ]
 
 @app.get("/proposicao/gerar-excel")
-def generate_excel(tipo: str, data_inicio: str, data_final: str):
-    crawler = ProposicoesCrawler(tipo=tipo, data_inicio=data_inicio, data_final=data_final)
+def generate_excel(id_municipio: int, tipo: str, data_inicio: str, data_final: str):
+    crawler = ProposicoesCrawler(id_municipio=id_municipio, tipo=tipo, data_inicio=data_inicio, data_final=data_final)
     
     try:
         links = crawler.gera_links()
@@ -34,8 +37,8 @@ def generate_excel(tipo: str, data_inicio: str, data_final: str):
     return FileResponse(path=file_path, filename="proposicao.xlsx", media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
 @app.get("/projeto/gerar-excel")
-def generate_excel(especie: str, data_inicio: str, data_final: str):
-    crawler = ProjetosCrawler(especie=especie, data_inicio=data_inicio, data_final=data_final)
+def generate_excel(id_municipio: int, especie: str, data_inicio: str, data_final: str):
+    crawler = ProjetosCrawler(id_municipio=id_municipio, especie=especie, data_inicio=data_inicio, data_final=data_final)
     
     try:
         links = crawler.gera_links()
@@ -52,3 +55,14 @@ def generate_excel(especie: str, data_inicio: str, data_final: str):
     df.to_excel(file_path, index=False)
     
     return FileResponse(path=file_path, filename="projeto.xlsx", media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+@app.get("/projeto/especies")
+def read_projeto_especies():
+    return [
+        {"id": 0, "nome": "Todas"},
+        {"id": 1, "nome": "Lei Ordinária"},
+        {"id": 2, "nome": "Lei Complementar"},
+        {"id": 3, "nome": "Decreto Legislativo"},
+        {"id": 4, "nome": "Resolução"},
+        {"id": 5, "nome": "Emenda a LOM"},
+    ]

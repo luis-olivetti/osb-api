@@ -7,7 +7,8 @@ from requests.exceptions import HTTPError
 
 class ProposicoesCrawler:
 
-    def __init__(self, tipo="", data_inicio="", data_final=""):
+    def __init__(self, id_municipio, tipo="", data_inicio="", data_final=""):
+        self.id_municipio = id_municipio
         self.tipo_proposicao = tipo
         self.data_inicio = data_inicio
         self.data_final = data_final
@@ -22,7 +23,7 @@ class ProposicoesCrawler:
         }
 
     def __pagina_base(self):
-        url_base = f'https://www.legislador.com.br/LegisladorWEB.ASP?WCI=ProposicaoConsulta&ID=9&dtInicial={self.data_inicio}&dtFinal={self.data_final}&tpProposicao={self.tipo_proposicao}&'
+        url_base = f'https://www.legislador.com.br/LegisladorWEB.ASP?WCI=ProposicaoConsulta&ID={self.id_municipio}&dtInicial={self.data_inicio}&dtFinal={self.data_final}&tpProposicao={self.tipo_proposicao}&'
         return url_base
 
     def __gera_args(self):
