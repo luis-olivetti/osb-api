@@ -1,9 +1,9 @@
 # osb-api
 
-Utilize o uvicorn para iniciar a aplicação FastAPI. No terminal, navegue até o diretório onde o arquivo main.py está localizado e execute:
+Utilize o uvicorn para iniciar a aplicação FastAPI. No terminal, navegue até a raíz do projeto e execute:
 
 ```bash
-$ uvicorn main:app --reload
+$ uvicorn app.main:app --reload
 ```
 - main é o nome do arquivo (sem a extensão .py).
 - app é o nome da instância do FastAPI no arquivo.
