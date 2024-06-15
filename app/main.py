@@ -36,6 +36,17 @@ def generate_excel(id_municipio: int, tipo: str, data_inicio: str, data_final: s
     
     return FileResponse(path=file_path, filename="proposicao.xlsx", media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
+@app.get("/proposicao/tipos")
+def read_proposicao_tipos():
+    return [
+        {"id": 0, "nome": "Todos"},
+        {"id": 1, "nome": "Indicação"},
+        {"id": 2, "nome": "Requerimento"},
+        {"id": 3, "nome": "Moção"},
+        {"id": 4, "nome": "Resolução MD"},
+        {"id": 5, "nome": "Portaria"},
+    ]
+
 @app.get("/projeto/gerar-excel")
 def generate_excel(id_municipio: int, especie: str, data_inicio: str, data_final: str):
     crawler = ProjetosCrawler(id_municipio=id_municipio, especie=especie, data_inicio=data_inicio, data_final=data_final)
