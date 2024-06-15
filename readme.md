@@ -32,6 +32,10 @@ $ docker build -t osb_api_image .
 $ docker run -d -p 8000:8000 --name osb_api_container osb_api_image
 ```
 
+## Swagger
+
+Para visualizar a documentação, acesse http://127.0.0.1:8000/docs
+
 ## Referências e agradecimentos
 
 Esta API foi criada com base no repositório [Observatório](https://github.com/oliver-rafael/observatorio) do Rafael Silva, que desenvolveu a extração de Proposições. Agradecemos ao autor.
