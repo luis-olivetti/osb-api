@@ -4,6 +4,11 @@ Este projeto é uma API Python que utiliza crawlers para extrair dados legislati
 
 ## Inicialização da Aplicação
 
+Instale as depêndencias do projeto com o seguinte comando:
+```bash
+$ pip install --no-cache-dir -r requirements.txt
+```
+
 Utilize o uvicorn para iniciar a aplicação FastAPI. No terminal, navegue até a raíz do projeto e execute:
 
 ```bash
