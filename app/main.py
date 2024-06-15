@@ -1,7 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+
+from .proposicoes_crawler import ProposicoesCrawler
 
 app = FastAPI()
 
@@ -9,17 +12,22 @@ app = FastAPI()
 def read_root():
     return {"message": "Hello, World!"}
 
-@app.get("/scrape")
-def scrape_url(url: str):
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    return {"title": soup.title.string if soup.title else "No title found"}
+@app.get("/generate-excel")
+def generate_excel(tipo: str, data_inicio: str, data_final: str):
+    crawler = ProposicoesCrawler(tipo=tipo, data_inicio=data_inicio, data_final=data_final)
+    
+    try:
+        links = crawler.gera_links()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/dataframe")
-def get_dataframe():
-    data = {
-        "Column1": [1, 2, 3, 4],
-        "Column2": ["A", "B", "C", "D"]
-    }
-    df = pd.DataFrame(data)
-    return df.to_dict(orient="records")
+    for link in links:
+        resposta = requests.get(link)
+        pagina = BeautifulSoup(resposta.content, 'html.parser')
+        dados = crawler.obter_dados(pagina)
+    
+    df = pd.DataFrame(dados)
+    file_path = "/tmp/proposicoes.xlsx"
+    df.to_excel(file_path, index=False)
+    
+    return FileResponse(path=file_path, filename="proposicoes.xlsx", media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
