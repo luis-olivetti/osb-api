@@ -36,6 +36,14 @@ $ docker run -d -p 8000:8000 --name osb_api_container osb_api_image
 
 Para visualizar a documentação, acesse http://127.0.0.1:8000/docs
 
+## Exemplo de chamada
+
+```
+curl -X 'GET' \
+  'http://localhost:8000/proposicao/gerar-excel?id_municipio=9&tipo=3&data_inicio=2024-06-01&data_final=2024-06-04' \
+  -H 'accept: application/json'
+```
+
 ## Referências e agradecimentos
 
 Esta API foi criada com base no repositório [Observatório](https://github.com/oliver-rafael/observatorio) do Rafael Silva, que desenvolveu a extração de Proposições. Agradecemos ao autor.
