@@ -44,6 +44,10 @@ curl -X 'GET' \
   -H 'accept: application/json'
 ```
 
+## Observações
+
+- Um ponto observado no dia 05/07/2024 é de que a busca por projetos no site oficial do Legislador está com um comportamento inesperado ao realizar o filtro por data. Ao definir um intervalo de data, está retornado alguns projetos de outras datas e por consequência, a exportação para Excel acaba contendo estes mesmos registros.
+
 ## Referências e agradecimentos
 
 Esta API foi criada com base no repositório [Observatório](https://github.com/oliver-rafael/observatorio) do Rafael Silva, que desenvolveu a extração de Proposições. Agradecemos ao autor.

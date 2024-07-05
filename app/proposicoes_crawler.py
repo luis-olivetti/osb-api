@@ -31,24 +31,34 @@ class ProposicoesCrawler:
         if resposta.status_code != 200:
             raise HTTPError(f"Erro ao acessar a página: {resposta.status_code}")
         pagina = BeautifulSoup(resposta.content, 'html.parser')
-        proposicao_info = pagina.find('a', {
+        
+        # Encontrar todos os elementos com a classe especificada
+        proposicao_infos = pagina.find_all('a', {
             'class': 'btn btn-outline-secondary float-right d-flex justify-content-between align-items-center'})
-        proposicao_info_link = re.split('[()]', proposicao_info['onclick'])[1].split(',')
+        
+        # Armazenar as informações em um array
+        proposicoes = []
+        for proposicao_info in proposicao_infos:
+            proposicao_info_link = re.split('[()]', proposicao_info['onclick'])[1].split(',')
 
-        cam_proposicao = proposicao_info_link[0]
-        num_proposicao = int(proposicao_info_link[2])
-        tipo_proposicao = proposicao_info_link[1]
-        ano_proposicao = proposicao_info_link[3]
+            cam_proposicao = proposicao_info_link[0]
+            num_proposicao = int(proposicao_info_link[2])
+            tipo_proposicao = proposicao_info_link[1]
+            ano_proposicao = proposicao_info_link[3]
 
-        return cam_proposicao, tipo_proposicao, num_proposicao, ano_proposicao
+            proposicoes.append((cam_proposicao, tipo_proposicao, num_proposicao, ano_proposicao))
+        
+        return proposicoes
 
     def gera_links(self):
         links_proposicoes = []
-        args_proposicao = self.__gera_args()
+        args_proposicoes = self.__gera_args()
 
-        for proposicao in range(args_proposicao[2]):
+        for args_proposicao in args_proposicoes:
+            cam_proposicao, tipo_proposicao, num_proposicao, ano_proposicao = args_proposicao
+
             links_proposicoes.append(
-                f'https://www.legislador.com.br/LegisladorWEB.ASP?WCI=ProposicaoTexto&ID={args_proposicao[0]}&TPProposicao={args_proposicao[1]}&nrProposicao={args_proposicao[2] - proposicao}&aaProposicao={args_proposicao[3]}')
+                f'https://www.legislador.com.br/LegisladorWEB.ASP?WCI=ProposicaoTexto&ID={cam_proposicao}&TPProposicao={tipo_proposicao}&nrProposicao={num_proposicao}&aaProposicao={ano_proposicao}')
 
         return links_proposicoes
 

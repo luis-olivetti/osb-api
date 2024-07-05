@@ -34,24 +34,32 @@ class ProjetosCrawler:
         if resposta.status_code != 200:
             raise HTTPError(f"Erro ao acessar a página: {resposta.status_code}")
         pagina = BeautifulSoup(resposta.content, 'html.parser')
-        pagina_info = pagina.find('a', {
+
+        pagina_infos = pagina.find_all('a', {
             'class': 'btn btn-outline-secondary float-right d-flex justify-content-between align-items-center'})
-        pagina_info_link = re.split('[()]', pagina_info['onclick'])[1].split(',')
+        
+        projetos = []
+        for pagina_info in pagina_infos:
+            pagina_info_link = re.split('[()]', pagina_info['onclick'])[1].split(',')
 
-        id = pagina_info_link[0]
-        especie = pagina_info_link[1]
-        numero = int(pagina_info_link[2])
-        ano = pagina_info_link[3]
+            id = pagina_info_link[0]
+            especie = pagina_info_link[1]
+            numero = int(pagina_info_link[2])
+            ano = pagina_info_link[3]
 
-        return id, especie, numero, ano
+            projetos.append((id, especie, numero, ano))
+
+        return projetos
 
     def gera_links(self):
         links = []
         argumentos = self.__gera_args()
 
-        for projeto in range(argumentos[2]):
+        for argumentos in argumentos:
+            id, especie, numero, ano = argumentos
+
             links.append(
-                f'https://www.legislador.com.br/LegisladorWEB.ASP?WCI=ProjetoTexto&ID={argumentos[0]}&inEspecie={argumentos[1]}&nrProjeto={argumentos[2] - projeto}&aaProjeto={argumentos[3]}')
+                f'https://www.legislador.com.br/LegisladorWEB.ASP?WCI=ProjetoTexto&ID={id}&inEspecie={especie}&nrProjeto={numero}&aaProjeto={ano}')
 
         return links
 
