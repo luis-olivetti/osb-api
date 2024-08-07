@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import requests
 from bs4 import BeautifulSoup
@@ -8,6 +9,14 @@ from app.projetos_crawler import ProjetosCrawler
 from app.proposicoes_crawler import ProposicoesCrawler
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/municipios")
 def read_municipios():
