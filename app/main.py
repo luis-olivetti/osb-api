@@ -33,11 +33,16 @@ def generate_excel(id_municipio: int, tipo: str, data_inicio: str, data_final: s
         links = crawler.gera_links()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+    dados = []
 
     for link in links:
-        resposta = requests.get(link)
-        pagina = BeautifulSoup(resposta.content, 'html.parser')
-        dados = crawler.obter_dados(pagina)
+       resposta = requests.get(link)
+       pagina = BeautifulSoup(resposta.content, 'html.parser')
+       dados = crawler.obter_dados(pagina)
+
+    if not dados:
+       raise HTTPException(status_code=404, detail="Nenhum dado encontrado")
     
     df = pd.DataFrame(dados)
     file_path = "/tmp/proposicao.xlsx"
@@ -65,10 +70,15 @@ def generate_excel(id_municipio: int, especie: str, data_inicio: str, data_final
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+    dados = []
+
     for link in links:
         resposta = requests.get(link)
         pagina = BeautifulSoup(resposta.content, 'html.parser')
         dados = crawler.obter_dados(pagina)
+
+    if not dados:
+        raise HTTPException(status_code=404, detail="Nenhum dado encontrado")
     
     df = pd.DataFrame(dados)
     file_path = "/tmp/projeto.xlsx"
